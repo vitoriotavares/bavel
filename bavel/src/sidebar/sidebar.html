@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bavel</title>
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+    <div class="sidebar-container">
+        <header class="sidebar-header">
+            <div class="logo">
+                <img src="../../assets/icons/icon32.png" alt="Bavel" class="logo-icon">
+                <h1>Bavel</h1>
+            </div>
+            <button id="settingsBtn" class="settings-btn" data-i18n-title="settings">⚙️</button>
+        </header>
+
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="welcome-content">
+                <h2 data-i18n="welcomeTitle">Configurar Idioma</h2>
+                <p data-i18n="welcomeDescription">Configure seu idioma nativo para receber traduções e sugestões personalizadas.</p>
+                <div class="language-setup">
+                    <label for="nativeLanguage" data-i18n="nativeLanguageLabel">Seu idioma nativo:</label>
+                    <select id="nativeLanguage">
+                        <option value="pt" data-i18n="languages.pt">Português</option>
+                        <option value="en" data-i18n="languages.en">English</option>
+                        <option value="es" data-i18n="languages.es">Español</option>
+                        <option value="fr" data-i18n="languages.fr">Français</option>
+                        <option value="de" data-i18n="languages.de">Deutsch</option>
+                        <option value="it" data-i18n="languages.it">Italiano</option>
+                    </select>
+                    <button id="saveLanguage" class="primary-btn" data-i18n="saveConfiguration">Salvar Configuração</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="idleScreen" class="idle-screen hidden">
+            <div class="idle-content">
+                <div class="idle-icon">🗣️</div>
+                <h2 data-i18n="readyToUse">Pronto para usar!</h2>
+                <p data-i18n="idleDescription">Selecione um texto em qualquer página e clique com o botão direito do mouse.</p>
+                <div class="idle-instructions">
+                    <div class="instruction-step">
+                        <span class="step-number">1</span>
+                        <span data-i18n="step1">Selecione um texto</span>
+                    </div>
+                    <div class="instruction-step">
+                        <span class="step-number">2</span>
+                        <span data-i18n="step2">Clique com botão direito</span>
+                    </div>
+                    <div class="instruction-step">
+                        <span class="step-number">3</span>
+                        <span data-i18n="step3">Escolha "Opinar com Bavel"</span>
+                    </div>
+                </div>
+                <div class="idle-footer">
+                    <button id="changeLanguageBtn" class="secondary-btn" data-i18n="changeLanguage">Alterar Idioma</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="analysisScreen" class="analysis-screen hidden">
+            <div class="section original-text">
+                <h3 data-i18n="originalText">Texto Original</h3>
+                <div id="originalText" class="text-content"></div>
+                <div class="text-meta">
+                    <span id="detectedLanguage" class="language-tag"></span>
+                    <span id="wordCount" class="word-count"></span>
+                </div>
+            </div>
+
+            <div class="section translation">
+                <h3 data-i18n="translation">Tradução</h3>
+                <div id="translationText" class="text-content"></div>
+            </div>
+
+            <div class="section context">
+                <h3 data-i18n="context">Contexto</h3>
+                <div id="contextText" class="text-content"></div>
+            </div>
+
+            <div class="section suggestions">
+                <h3 data-i18n="suggestions">Sugestões de Resposta</h3>
+                <div id="suggestionsList" class="suggestions-list"></div>
+            </div>
+
+            <div class="section response-area">
+                <h3 data-i18n="yourResponse">Sua Resposta</h3>
+                <textarea id="userResponse" data-i18n-placeholder="responsePlaceholder" placeholder="Escreva sua resposta no idioma original..."></textarea>
+                <div class="response-actions">
+                    <button id="translateResponse" class="secondary-btn" data-i18n="translateResponse">Traduzir Resposta</button>
+                    <button id="copyResponse" class="primary-btn" data-i18n="copy">Copiar</button>
+                </div>
+                <div id="responseTranslation" class="response-translation hidden"></div>
+            </div>
+        </div>
+
+        <div id="loadingScreen" class="loading-screen hidden">
+            <div class="loading-spinner"></div>
+            <p data-i18n="analyzing">Analisando texto...</p>
+        </div>
+    </div>
+
+    <script src="../i18n/translations.js"></script>
+    <script src="sidebar.js"></script>
+</body>
+</html>

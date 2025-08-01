@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Bavel",
+  "version": "1.0.0",
+  "description": "Ajuda usuários a praticar idiomas respondendo a posts em sites como Reddit, StackOverflow e blogs",
+  
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "storage",
+    "sidePanel"
+  ],
+  
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  
+  "background": {
+    "service_worker": "src/background/background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content.js"],
+      "css": ["assets/css/content.css"]
+    }
+  ],
+  
+  "side_panel": {
+    "default_path": "src/sidebar/sidebar.html"
+  },
+  
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Bavel - Pratique idiomas"
+  }
+}
