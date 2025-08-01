@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Bavel Debug",
+  "version": "1.0.0",
+  "description": "Versão de debug do Bavel para identificar problemas",
+  
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "storage",
+    "sidePanel",
+    "scripting"
+  ],
+  
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  
+  "background": {
+    "service_worker": "src/background/background-debug.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content-debug.js"]
+    }
+  ],
+  
+  "side_panel": {
+    "default_path": "src/sidebar/sidebar.html"
+  },
+  
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Bavel Debug"
+  }
+}

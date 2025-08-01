@@ -22,6 +22,9 @@ function setupEventListeners() {
     document.getElementById('translateResponse').addEventListener('click', translateUserResponse);
     document.getElementById('copyResponse').addEventListener('click', copyResponseToClipboard);
     
+    // Setup modern language selector
+    setupModernLanguageSelector();
+    
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Sidebar received message:', message);
         
@@ -39,10 +42,43 @@ function setupEventListeners() {
     });
 }
 
+function setupModernLanguageSelector() {
+    const langOptions = document.querySelectorAll('.lang-option');
+    const saveButton = document.getElementById('saveLanguage');
+    const hiddenSelect = document.getElementById('nativeLanguage');
+    
+    langOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            // Remove selected class from all options
+            langOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            option.classList.add('selected');
+            
+            // Update hidden select value for compatibility
+            const selectedValue = option.getAttribute('data-value');
+            hiddenSelect.value = selectedValue;
+            
+            // Enable save button
+            saveButton.disabled = false;
+        });
+    });
+}
+
 async function checkUserLanguage() {
     const result = await chrome.storage.sync.get(['userLanguage']);
     if (result.userLanguage) {
+        // Update hidden select
         document.getElementById('nativeLanguage').value = result.userLanguage;
+        
+        // Update modern selector
+        const selectedOption = document.querySelector(`.lang-option[data-value="${result.userLanguage}"]`);
+        if (selectedOption) {
+            document.querySelectorAll('.lang-option').forEach(opt => opt.classList.remove('selected'));
+            selectedOption.classList.add('selected');
+            document.getElementById('saveLanguage').disabled = false;
+        }
+        
         i18n.setLanguage(result.userLanguage);
         updateUI();
     }

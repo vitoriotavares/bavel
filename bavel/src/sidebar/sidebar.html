@@ -17,20 +17,81 @@
         </header>
 
         <div id="welcomeScreen" class="welcome-screen">
-            <div class="welcome-content">
-                <h2 data-i18n="welcomeTitle">Configurar Idioma</h2>
-                <p data-i18n="welcomeDescription">Configure seu idioma nativo para receber traduções e sugestões personalizadas.</p>
-                <div class="language-setup">
-                    <label for="nativeLanguage" data-i18n="nativeLanguageLabel">Seu idioma nativo:</label>
-                    <select id="nativeLanguage">
-                        <option value="pt" data-i18n="languages.pt">Português</option>
-                        <option value="en" data-i18n="languages.en">English</option>
-                        <option value="es" data-i18n="languages.es">Español</option>
-                        <option value="fr" data-i18n="languages.fr">Français</option>
-                        <option value="de" data-i18n="languages.de">Deutsch</option>
-                        <option value="it" data-i18n="languages.it">Italiano</option>
-                    </select>
-                    <button id="saveLanguage" class="primary-btn" data-i18n="saveConfiguration">Salvar Configuração</button>
+            <!-- Floating Language Flags -->
+            <div class="floating-flags">
+                <div class="flag-circle flag-1" data-lang="pt">🇧🇷</div>
+                <div class="flag-circle flag-2" data-lang="en">🇺🇸</div>
+                <div class="flag-circle flag-3" data-lang="es">🇪🇸</div>
+                <div class="flag-circle flag-4" data-lang="fr">🇫🇷</div>
+                <div class="flag-circle flag-5" data-lang="de">🇩🇪</div>
+                <div class="flag-circle flag-6" data-lang="it">🇮🇹</div>
+                <div class="flag-circle flag-7" data-lang="ru">🇷🇺</div>
+                <div class="flag-circle flag-8" data-lang="zh">🇨🇳</div>
+            </div>
+            
+            <div class="welcome-content-modern">
+                <div class="welcome-card">
+                    <div class="welcome-header">
+                        <h1 class="welcome-title" data-i18n="appName">Bavel</h1>
+                        <p class="welcome-subtitle" data-i18n="appTagline">Practice languages through contextual conversations</p>
+                    </div>
+                    
+                    <div class="language-selector-modern">
+                        <h3 data-i18n="chooseLanguage">Choose your native language</h3>
+                        <div class="language-grid">
+                            <button class="lang-option" data-value="pt">
+                                <span class="lang-flag">🇧🇷</span>
+                                <span class="lang-name">Português</span>
+                            </button>
+                            <button class="lang-option" data-value="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span class="lang-name">English</span>
+                            </button>
+                            <button class="lang-option" data-value="es">
+                                <span class="lang-flag">🇪🇸</span>
+                                <span class="lang-name">Español</span>
+                            </button>
+                            <button class="lang-option" data-value="fr">
+                                <span class="lang-flag">🇫🇷</span>
+                                <span class="lang-name">Français</span>
+                            </button>
+                            <button class="lang-option" data-value="de">
+                                <span class="lang-flag">🇩🇪</span>
+                                <span class="lang-name">Deutsch</span>
+                            </button>
+                            <button class="lang-option" data-value="it">
+                                <span class="lang-flag">🇮🇹</span>
+                                <span class="lang-name">Italiano</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Hidden select for compatibility -->
+                        <select id="nativeLanguage" style="display: none;">
+                            <option value="pt">Português</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="it">Italiano</option>
+                        </select>
+                        
+                        <button id="saveLanguage" class="modern-btn" disabled data-i18n="getStarted">Get Started</button>
+                    </div>
+                    
+                    <div class="welcome-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🌐</div>
+                            <span data-i18n="featureTranslate">Smart Translation</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💡</div>
+                            <span data-i18n="featureSuggestions">Response Suggestions</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <span data-i18n="featureContext">Contextual Analysis</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

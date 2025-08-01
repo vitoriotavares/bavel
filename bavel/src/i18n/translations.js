@@ -5,6 +5,15 @@ const translations = {
     settings: "Configurações",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Pratique idiomas através de conversas contextuais",
+    chooseLanguage: "Escolha seu idioma nativo",
+    getStarted: "Começar",
+    featureTranslate: "Tradução Inteligente",
+    featureSuggestions: "Sugestões de Resposta",
+    featureContext: "Análise Contextual",
+    
+    // Legacy
     welcomeTitle: "Configurar Idioma",
     welcomeDescription: "Configure seu idioma nativo para receber traduções e sugestões personalizadas.",
     nativeLanguageLabel: "Seu idioma nativo:",
@@ -71,6 +80,15 @@ const translations = {
     settings: "Settings",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Practice languages through contextual conversations",
+    chooseLanguage: "Choose your native language",
+    getStarted: "Get Started",
+    featureTranslate: "Smart Translation",
+    featureSuggestions: "Response Suggestions",
+    featureContext: "Contextual Analysis",
+    
+    // Legacy
     welcomeTitle: "Configure Language",
     welcomeDescription: "Set your native language to receive personalized translations and suggestions.",
     nativeLanguageLabel: "Your native language:",
@@ -137,6 +155,15 @@ const translations = {
     settings: "Configuración",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Practica idiomas a través de conversaciones contextuales",
+    chooseLanguage: "Elige tu idioma nativo",
+    getStarted: "Comenzar",
+    featureTranslate: "Traducción Inteligente",
+    featureSuggestions: "Sugerencias de Respuesta",
+    featureContext: "Análisis Contextual",
+    
+    // Legacy
     welcomeTitle: "Configurar Idioma",
     welcomeDescription: "Configure su idioma nativo para recibir traducciones y sugerencias personalizadas.",
     nativeLanguageLabel: "Su idioma nativo:",
@@ -192,6 +219,15 @@ const translations = {
     settings: "Paramètres",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Pratiquez les langues à travers des conversations contextuelles",
+    chooseLanguage: "Choisissez votre langue maternelle",
+    getStarted: "Commencer",
+    featureTranslate: "Traduction Intelligente",
+    featureSuggestions: "Suggestions de Réponse",
+    featureContext: "Analyse Contextuelle",
+    
+    // Legacy
     welcomeTitle: "Configurer la Langue",
     welcomeDescription: "Définissez votre langue maternelle pour recevoir des traductions et suggestions personnalisées.",
     nativeLanguageLabel: "Votre langue maternelle:",
@@ -247,6 +283,15 @@ const translations = {
     settings: "Einstellungen",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Praktizieren Sie Sprachen durch kontextuelle Gespräche",
+    chooseLanguage: "Wählen Sie Ihre Muttersprache",
+    getStarted: "Loslegen",
+    featureTranslate: "Intelligente Übersetzung",
+    featureSuggestions: "Antwort-Vorschläge",
+    featureContext: "Kontextuelle Analyse",
+    
+    // Legacy
     welcomeTitle: "Sprache Konfigurieren",
     welcomeDescription: "Stellen Sie Ihre Muttersprache ein, um personalisierte Übersetzungen und Vorschläge zu erhalten.",
     nativeLanguageLabel: "Ihre Muttersprache:",
@@ -302,6 +347,15 @@ const translations = {
     settings: "Impostazioni",
     
     // Welcome Screen
+    appName: "Bavel",
+    appTagline: "Pratica le lingue attraverso conversazioni contestuali",
+    chooseLanguage: "Scegli la tua lingua madre",
+    getStarted: "Inizia",
+    featureTranslate: "Traduzione Intelligente",
+    featureSuggestions: "Suggerimenti di Risposta",
+    featureContext: "Analisi Contestuale",
+    
+    // Legacy
     welcomeTitle: "Configura Lingua",
     welcomeDescription: "Imposta la tua lingua madre per ricevere traduzioni e suggerimenti personalizzati.",
     nativeLanguageLabel: "La tua lingua madre:",
