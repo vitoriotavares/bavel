@@ -97,8 +97,30 @@
         </div>
 
         <div id="loadingScreen" class="loading-screen hidden">
-            <div class="loading-spinner"></div>
-            <p data-i18n="analyzing">Analisando texto...</p>
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h3 data-i18n="processingText">Processando Texto</h3>
+                <p class="loading-main-text" data-i18n="analyzing">Analisando texto...</p>
+                <div class="loading-steps">
+                    <div class="loading-step active">
+                        <div class="step-icon">🔍</div>
+                        <span data-i18n="extractingContext">Extraindo contexto</span>
+                    </div>
+                    <div class="loading-step">
+                        <div class="step-icon">🌐</div>
+                        <span data-i18n="translating">Traduzindo</span>
+                    </div>
+                    <div class="loading-step">
+                        <div class="step-icon">💡</div>
+                        <span data-i18n="generatingSuggestions">Gerando sugestões</span>
+                    </div>
+                </div>
+                <div class="loading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

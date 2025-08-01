@@ -36,6 +36,17 @@ const translations = {
     copyError: "Erro ao copiar",
     analyzing: "Analisando texto...",
     
+    // Loading
+    processingText: "Processando Texto",
+    extractingContext: "Extraindo contexto",
+    translating: "Traduzindo",
+    generatingSuggestions: "Gerando sugestões",
+    
+    // Translation
+    alternatives: "Alternativas",
+    alternativeSelected: "Alternativa selecionada!",
+    confidence: "Confiança",
+    
     // Meta
     words: "palavras",
     translationLabel: "Tradução:",
@@ -90,6 +101,17 @@ const translations = {
     responseCopied: "Response copied!",
     copyError: "Copy error",
     analyzing: "Analyzing text...",
+    
+    // Loading
+    processingText: "Processing Text",
+    extractingContext: "Extracting context",
+    translating: "Translating",
+    generatingSuggestions: "Generating suggestions",
+    
+    // Translation
+    alternatives: "Alternatives",
+    alternativeSelected: "Alternative selected!",
+    confidence: "Confidence",
     
     // Meta
     words: "words",

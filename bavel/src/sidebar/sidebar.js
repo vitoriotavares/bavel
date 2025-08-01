@@ -23,9 +23,19 @@ function setupEventListeners() {
     document.getElementById('copyResponse').addEventListener('click', copyResponseToClipboard);
     
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        console.log('Sidebar received message:', message);
+        
+        if (message.action === "showLoading") {
+            showLoadingScreen(message.data);
+            sendResponse({ success: true });
+        }
+        
         if (message.action === "updateSidebar") {
             showAnalysisScreen(message.data);
+            sendResponse({ success: true });
         }
+        
+        return true;
     });
 }
 
@@ -76,12 +86,67 @@ function showAnalysisScreen(data) {
     document.getElementById('analysisScreen').classList.remove('hidden');
 }
 
-function showLoadingScreen() {
+function showLoadingScreen(data) {
     hideAllScreens();
+    
+    // Atualizar texto de loading se fornecido
+    if (data && data.originalText) {
+        const loadingText = document.querySelector('#loadingScreen .loading-main-text');
+        if (loadingText) {
+            loadingText.textContent = `${i18n.t('analyzing')} "${data.originalText.substring(0, 50)}${data.originalText.length > 50 ? '...' : ''}"`;
+        }
+    }
+    
+    // Resetar steps
+    const steps = document.querySelectorAll('.loading-step');
+    steps.forEach((step, index) => {
+        step.classList.remove('active', 'completed');
+        if (index === 0) step.classList.add('active');
+    });
+    
+    // Animar steps
+    animateLoadingSteps();
+    
     document.getElementById('loadingScreen').classList.remove('hidden');
 }
 
+function animateLoadingSteps() {
+    const steps = document.querySelectorAll('.loading-step');
+    let currentStep = 0;
+    
+    const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+            // Marcar step atual como completed
+            if (currentStep > 0) {
+                steps[currentStep - 1].classList.remove('active');
+                steps[currentStep - 1].classList.add('completed');
+            }
+            
+            // Ativar próximo step
+            if (currentStep < steps.length) {
+                steps[currentStep].classList.add('active');
+            }
+            
+            currentStep++;
+        }
+        
+        // Parar quando todos os steps estiverem completos
+        if (currentStep > steps.length) {
+            clearInterval(interval);
+        }
+    }, 1000); // 1 segundo entre cada step
+    
+    // Limpar interval quando sair da tela de loading
+    window.loadingInterval = interval;
+}
+
 function hideAllScreens() {
+    // Limpar loading interval se existir
+    if (window.loadingInterval) {
+        clearInterval(window.loadingInterval);
+        window.loadingInterval = null;
+    }
+    
     document.getElementById('welcomeScreen').classList.add('hidden');
     document.getElementById('idleScreen').classList.add('hidden');
     document.getElementById('analysisScreen').classList.add('hidden');
@@ -146,10 +211,46 @@ async function translateUserResponse() {
         });
         
         if (response.success && response.data.translation) {
-            translationDiv.innerHTML = `
-                <strong>Tradução:</strong><br>
-                ${response.data.translation}
+            let translationHTML = `
+                <div class="translation-result">
+                    <strong>${i18n.t('translationLabel')}</strong>
+                    <div class="translation-text">${response.data.translation}</div>
             `;
+            
+            // Mostrar confiança se disponível
+            if (response.data.confidence) {
+                const confidencePercent = Math.round(response.data.confidence * 100);
+                translationHTML += `
+                    <div class="translation-confidence">
+                        <small>${i18n.t('confidence')}: ${confidencePercent}%</small>
+                    </div>
+                `;
+            }
+            
+            // Mostrar alternativas se disponíveis
+            if (response.data.alternatives && response.data.alternatives.length > 0) {
+                translationHTML += `
+                    <div class="translation-alternatives">
+                        <strong>${i18n.t('alternatives')}:</strong>
+                        <div class="alternatives-list">
+                `;
+                
+                response.data.alternatives.forEach((alt, index) => {
+                    translationHTML += `
+                        <div class="alternative-item" onclick="selectAlternative('${alt.replace(/'/g, "\\'")}')">
+                            ${index + 1}. ${alt}
+                        </div>
+                    `;
+                });
+                
+                translationHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            translationHTML += '</div>';
+            translationDiv.innerHTML = translationHTML;
         } else {
             translationDiv.innerHTML = '<em>Não foi possível traduzir no momento</em>';
         }
@@ -247,6 +348,19 @@ function showIdleScreen() {
     hideAllScreens();
     document.getElementById('idleScreen').classList.remove('hidden');
 }
+
+// Função global para seleção de alternativas
+window.selectAlternative = function(alternativeText) {
+    const responseTextarea = document.getElementById('userResponse');
+    responseTextarea.value = alternativeText;
+    responseTextarea.focus();
+    
+    // Esconder a tradução após seleção
+    const translationDiv = document.getElementById('responseTranslation');
+    translationDiv.classList.add('hidden');
+    
+    showMessage(i18n.t('alternativeSelected'), 'success');
+};
 
 function showMessage(message, type) {
     const messageDiv = document.createElement('div');

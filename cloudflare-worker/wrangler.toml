@@ -1,0 +1,47 @@
+name = "bavel-security-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Configuração de produção
+[env.production]
+[env.production.vars]
+N8N_ANALYZE_URL = "https://n8n.ai-shield.online/webhook/bavel/analyze"
+N8N_TRANSLATE_URL = "https://n8n.ai-shield.online/webhook/bavel/translate"
+SECURITY_WEBHOOK_URL = "https://your-security-alerts.com/webhook"
+
+# KV Namespaces para produção
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "c335f215806048b5b96e1af98676cd0c"
+
+[[env.production.kv_namespaces]]
+binding = "SECURITY_KV" 
+id = "e10a59e61c434fba97e4f56413d0b653"
+
+[[env.production.kv_namespaces]]
+binding = "METRICS_KV"
+id = "49eae4c63c2e45fba315717f77a051ae"
+
+# Configuração de desenvolvimento
+[env.development]
+[env.development.vars]
+N8N_ANALYZE_URL = "https://n8n.ai-shield.online/webhook/bavel/analyze"
+N8N_TRANSLATE_URL = "https://n8n.ai-shield.online/webhook/bavel/translate"
+SECURITY_WEBHOOK_URL = ""
+
+[[env.development.kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "3c04b42f4c5d4bec9f671a939fcbc3a9"
+
+[[env.development.kv_namespaces]]
+binding = "SECURITY_KV"
+id = "0ce9d8ee311d4023be518a8146037040"
+
+[[env.development.kv_namespaces]]
+binding = "METRICS_KV"
+id = "c169e2af6dcf49fb8449604da6afe865"
+
+# Secrets (configurar via CLI)
+# wrangler secret put BAVEL_HMAC_SECRET --env production
+# wrangler secret put BAVEL_HMAC_SECRET --env development

@@ -8,7 +8,8 @@
     "contextMenus",
     "activeTab",
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "scripting"
   ],
   
   "host_permissions": [

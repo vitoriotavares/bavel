@@ -1,3 +1,6 @@
+// Importar cliente de segurança
+importScripts('/src/security/security-client.js');
+
 chrome.runtime.onInstalled.addListener(async () => {
   // Definir título do menu baseado no idioma do usuário
   const result = await chrome.storage.sync.get(['userLanguage']);
@@ -46,12 +49,31 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     try {
       await chrome.sidePanel.open({ tabId: tab.id });
       
-      chrome.tabs.sendMessage(tab.id, {
-        action: "analyzeText",
-        selectedText: info.selectionText,
-        pageUrl: tab.url,
-        pageTitle: tab.title
-      });
+      // Garantir que o content script está injetado
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['src/content/content.js']
+        });
+        console.log('Content script injected successfully');
+      } catch (injectError) {
+        console.log('Content script already injected or injection failed:', injectError.message);
+      }
+      
+      // Aguardar um pouco e então enviar mensagem
+      setTimeout(() => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: "analyzeText",
+          selectedText: info.selectionText,
+          pageUrl: tab.url,
+          pageTitle: tab.title
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Erro ao enviar mensagem para content script:", chrome.runtime.lastError);
+          }
+        });
+      }, 300);
+      
     } catch (error) {
       console.error("Erro ao abrir sidebar:", error);
     }
@@ -59,23 +81,133 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Background received message:', message.action, sender);
+  
   if (message.action === "getSelectedText") {
     sendResponse({ success: true });
+    return false; // Resposta síncrona
   }
   
   if (message.action === "analyzeWithAPI") {
     handleAPIRequest(message.data)
-      .then(result => sendResponse({ success: true, data: result }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    return true;
+      .then(result => {
+        console.log('API request completed:', result);
+        try {
+          sendResponse({ success: true, data: result });
+        } catch (error) {
+          console.warn('SendResponse failed (connection may be closed):', error);
+        }
+      })
+      .catch(error => {
+        console.error('API request failed:', error);
+        try {
+          sendResponse({ success: false, error: error.message });
+        } catch (responseError) {
+          console.warn('SendResponse failed (connection may be closed):', responseError);
+        }
+      });
+    return true; // Resposta assíncrona
   }
+  
+  // Repassar mensagens para sidebar (se existir)
+  if (message.action === "updateSidebar" || message.action === "showLoading") {
+    // Estas mensagens são broadcast - não precisam de resposta específica
+    sendResponse({ success: true });
+    return false; // Resposta síncrona
+  }
+  
+  // Resposta padrão para mensagens não reconhecidas
+  sendResponse({ success: false, error: 'Unknown action' });
+  return false;
 });
 
+// Instância global do cliente de segurança
+let securityClient = null;
+
+// Inicializar cliente de segurança
+function initializeSecurityClient() {
+  if (!securityClient) {
+    securityClient = new BavelSecurityClient();
+    
+    // Validar configuração
+    const configValidation = validateSecurityConfig();
+    if (!configValidation.valid) {
+      console.warn('Security configuration issues detected:', configValidation.issues);
+    }
+  }
+  return securityClient;
+}
+
 async function handleAPIRequest(data) {
-  const { selectedText, userLanguage, action } = data;
+  const { selectedText, userLanguage, action, pageContext } = data;
   
-  // Lógica offline/mock - sem API externa
+  // Inicializar cliente de segurança
+  const client = initializeSecurityClient();
+  
   try {
+    console.log('Making secure API request:', {
+      action: action || 'analyze',
+      textLength: selectedText?.length || 0,
+      userLanguage,
+      hasPageContext: !!pageContext
+    });
+    
+    // Usar cliente de segurança para fazer a requisição
+    let result;
+    
+    if (action === 'translate') {
+      result = await client.makeRequestWithRetry('/translate', {
+        selectedText,
+        userLanguage,
+        sourceLanguage: 'auto',
+        context: pageContext?.title || ''
+      });
+    } else {
+      result = await client.makeRequestWithRetry('/analyze', {
+        selectedText,
+        userLanguage,
+        pageContext: pageContext || {}
+      });
+    }
+    
+    console.log('Secure API Response:', result.success ? 'Success' : 'Failed');
+    
+    if (!result.success) {
+      throw new Error(result.error || 'API request failed');
+    }
+    
+    // Processar resposta da API segura
+    if (action === 'translate') {
+      return {
+        translation: result.data.translation,
+        detectedLanguage: result.data.detectedLanguage,
+        confidence: result.data.confidence,
+        alternatives: result.data.alternatives || []
+      };
+    }
+    
+    return {
+      translation: result.data.translation?.text || result.data.translation,
+      context: result.data.context?.summary || result.data.context,
+      suggestions: result.data.suggestions?.map(s => 
+        typeof s === 'string' ? s : s.text
+      ) || [],
+      detectedLanguage: result.data.detectedLanguage || detectLanguage(selectedText)
+    };
+    
+  } catch (error) {
+    console.error('Secure API Error, falling back to offline mode:', error);
+    
+    // Log específico para diferentes tipos de erro
+    if (error.message.includes('Rate limit exceeded')) {
+      console.warn('Rate limit exceeded - consider reducing request frequency');
+    } else if (error.message.includes('Authentication failed')) {
+      console.error('Authentication failed - check API key configuration');
+    } else if (error.message.includes('Insufficient permissions')) {
+      console.error('Insufficient permissions - check API key permissions');
+    }
+    
+    // Fallback para modo offline
     if (action === 'translate') {
       return {
         translation: await mockTranslate(selectedText, userLanguage)
@@ -92,13 +224,6 @@ async function handleAPIRequest(data) {
       context,
       suggestions,
       detectedLanguage: detectedLang
-    };
-  } catch (error) {
-    console.error('Erro no processamento:', error);
-    return {
-      translation: "Não foi possível traduzir",
-      context: "Não foi possível gerar contexto",
-      suggestions: ["Interessante!", "Concordo.", "Discordo."]
     };
   }
 }
