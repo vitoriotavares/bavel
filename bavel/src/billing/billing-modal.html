@@ -1,0 +1,164 @@
+<!-- Billing Modal for Upgrade/Trial -->
+<div id="billingModal" class="modal billing-modal hidden">
+    <div class="modal-overlay" id="billingOverlay"></div>
+    <div class="modal-content billing-content">
+        <div class="billing-header">
+            <h2 data-i18n="upgrade_to_pro">Upgrade para Pro</h2>
+            <button class="close-btn" id="closeBillingModal">&times;</button>
+        </div>
+        
+        <div class="billing-body">
+            <!-- Usage Stats -->
+            <div class="usage-stats" id="usageStats">
+                <div class="usage-item">
+                    <span class="usage-label" data-i18n="daily_translations">Traduções Hoje</span>
+                    <span class="usage-value" id="dailyUsage">-/-</span>
+                    <div class="usage-bar">
+                        <div class="usage-progress" id="dailyProgress"></div>
+                    </div>
+                </div>
+                
+                <div class="usage-item">
+                    <span class="usage-label" data-i18n="monthly_responses">Respostas Este Mês</span>
+                    <span class="usage-value" id="monthlyUsage">-/-</span>
+                    <div class="usage-bar">
+                        <div class="usage-progress" id="monthlyProgress"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing Cards -->
+            <div class="pricing-container">
+                <!-- Free Trial Card -->
+                <div class="pricing-card trial-card" id="trialCard">
+                    <div class="card-header trial-header">
+                        <h3 data-i18n="free_trial">Teste Grátis</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">0</span>
+                            <span class="period" data-i18n="for_7_days">por 7 dias</span>
+                        </div>
+                    </div>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="unlimited_translations">Traduções ilimitadas</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="unlimited_responses">Respostas ilimitadas</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="priority_support">Suporte prioritário</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="no_credit_card">Sem cartão de crédito</span>
+                        </div>
+                    </div>
+                    
+                    <button class="cta-button trial-button" id="startTrialBtn" data-i18n="start_free_trial">
+                        Iniciar Teste Grátis
+                    </button>
+                </div>
+                
+                <!-- Pro Plan Card -->
+                <div class="pricing-card pro-card recommended" id="proCard">
+                    <div class="recommended-badge" data-i18n="recommended">Recomendado</div>
+                    
+                    <div class="card-header pro-header">
+                        <h3 data-i18n="pro_plan">Plano Pro</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">4,99</span>
+                            <span class="period" data-i18n="per_month">/mês</span>
+                        </div>
+                        <div class="price-note">
+                            <span data-i18n="yearly_save">ou R$ 39,99/ano (economia de 33%)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="unlimited_translations">Traduções ilimitadas</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="unlimited_responses">Respostas ilimitadas</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="advanced_context">Análise de contexto avançada</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="priority_support">Suporte prioritário</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span data-i18n="cancel_anytime">Cancele quando quiser</span>
+                        </div>
+                    </div>
+                    
+                    <button class="cta-button pro-button" id="upgradeToProBtn" data-i18n="upgrade_now">
+                        Fazer Upgrade Agora
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Current Plan Info -->
+            <div class="current-plan-info" id="currentPlanInfo">
+                <div class="plan-status">
+                    <span data-i18n="current_plan">Plano Atual:</span>
+                    <span class="plan-name" id="currentPlanName">Gratuito</span>
+                </div>
+                
+                <div class="trial-info hidden" id="trialInfo">
+                    <span class="trial-days" id="trialDays">X dias restantes</span>
+                    <span data-i18n="trial_remaining">no seu teste grátis</span>
+                </div>
+            </div>
+            
+            <!-- Billing Footer -->
+            <div class="billing-footer">
+                <div class="security-badges">
+                    <div class="badge">
+                        <span class="badge-icon">🔒</span>
+                        <span data-i18n="secure_payment">Pagamento Seguro</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-icon">⚡</span>
+                        <span data-i18n="instant_activation">Ativação Instantânea</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-icon">💳</span>
+                        <span data-i18n="stripe_powered">Powered by Stripe</span>
+                    </div>
+                </div>
+                
+                <div class="login-link">
+                    <span data-i18n="already_customer">Já é cliente?</span>
+                    <button class="link-button" id="loginBtn" data-i18n="login_here">Entre aqui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Usage Limit Warning -->
+<div id="usageLimitWarning" class="usage-warning hidden">
+    <div class="warning-content">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text">
+            <h4 data-i18n="limit_reached">Limite Atingido</h4>
+            <p id="warningMessage" data-i18n="upgrade_to_continue">Faça upgrade para continuar usando o Bavel sem limites.</p>
+        </div>
+        <div class="warning-actions">
+            <button class="btn-secondary" id="dismissWarning" data-i18n="dismiss">Dispensar</button>
+            <button class="btn-primary" id="upgradeFromWarning" data-i18n="upgrade">Upgrade</button>
+        </div>
+    </div>
+</div>

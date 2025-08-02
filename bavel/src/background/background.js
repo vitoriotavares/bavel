@@ -1,5 +1,21 @@
-// Importar cliente de segurança
+// Importar scripts necessários
 importScripts('/src/security/security-client.js');
+importScripts('/src/lib/extpay.js');
+importScripts('/src/billing/subscription-manager.js');
+importScripts('/src/billing/usage-tracker.js');
+
+// Inicializar managers de billing
+let subscriptionManager;
+let usageTracker;
+
+// Inicializar quando extension é carregada
+try {
+    subscriptionManager = new SubscriptionManager();
+    usageTracker = new UsageTracker();
+    console.log('Billing system initialized successfully');
+} catch (error) {
+    console.error('Error initializing billing system:', error);
+}
 
 chrome.runtime.onInstalled.addListener(async () => {
   // Definir título do menu baseado no idioma do usuário
@@ -93,7 +109,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then(result => {
         console.log('API request completed:', result);
         try {
-          sendResponse({ success: true, data: result });
+          sendResponse({ success: true, data: result, needsUpgrade: result.needsUpgrade });
         } catch (error) {
           console.warn('SendResponse failed (connection may be closed):', error);
         }
@@ -101,12 +117,62 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => {
         console.error('API request failed:', error);
         try {
-          sendResponse({ success: false, error: error.message });
+          sendResponse({ success: false, error: error.message, needsUpgrade: error.needsUpgrade });
         } catch (responseError) {
           console.warn('SendResponse failed (connection may be closed):', responseError);
         }
       });
     return true; // Resposta assíncrona
+  }
+  
+  // Billing related message handlers
+  if (message.action === "getSubscriptionStatus") {
+    subscriptionManager.getSubscriptionStatusForUI()
+      .then(status => {
+        sendResponse({ success: true, data: status });
+      })
+      .catch(error => {
+        console.error('Error getting subscription status:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+  
+  if (message.action === "getUsageStats") {
+    subscriptionManager.getSubscriptionPlan()
+      .then(plan => usageTracker.getUsageStats(plan))
+      .then(stats => {
+        sendResponse({ success: true, data: stats });
+      })
+      .catch(error => {
+        console.error('Error getting usage stats:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+  
+  if (message.action === "openUpgradePage") {
+    subscriptionManager.openUpgradePage()
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch(error => {
+        console.error('Error opening upgrade page:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+  
+  if (message.action === "startFreeTrial") {
+    subscriptionManager.startFreeTrial()
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch(error => {
+        console.error('Error starting free trial:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
   }
   
   // Repassar mensagens para sidebar (se existir)
@@ -141,16 +207,50 @@ function initializeSecurityClient() {
 async function handleAPIRequest(data) {
   const { selectedText, userLanguage, action, pageContext } = data;
   
-  // Inicializar cliente de segurança
-  const client = initializeSecurityClient();
-  
+  // Verificar limites de uso baseado na assinatura
   try {
+    const subscriptionPlan = await subscriptionManager.getSubscriptionPlan();
+    
+    // Verificar se pode fazer a requisição baseado no tipo
+    if (action === 'translate') {
+      const canTranslate = await usageTracker.canMakeTranslation(subscriptionPlan);
+      if (!canTranslate) {
+        return {
+          success: false,
+          error: 'Limite diário de traduções atingido. Faça upgrade para ter acesso ilimitado.',
+          needsUpgrade: true,
+          currentPlan: subscriptionPlan
+        };
+      }
+    } else {
+      // Para análise/sugestões de resposta
+      const canGenerateResponse = await usageTracker.canGenerateResponse(subscriptionPlan);
+      if (!canGenerateResponse) {
+        return {
+          success: false,
+          error: 'Limite mensal de respostas atingido. Faça upgrade para ter acesso ilimitado.',
+          needsUpgrade: true,
+          currentPlan: subscriptionPlan
+        };
+      }
+    }
+    
     console.log('Making secure API request:', {
       action: action || 'analyze',
       textLength: selectedText?.length || 0,
       userLanguage,
-      hasPageContext: !!pageContext
+      hasPageContext: !!pageContext,
+      subscriptionPlan: subscriptionPlan
     });
+  } catch (error) {
+    console.error('Error checking subscription limits:', error);
+    // Continue with request if billing check fails (graceful degradation)
+  }
+  
+  // Inicializar cliente de segurança
+  const client = initializeSecurityClient();
+  
+  try {
     
     // Usar cliente de segurança para fazer a requisição
     let result;
@@ -174,6 +274,18 @@ async function handleAPIRequest(data) {
     
     if (!result.success) {
       throw new Error(result.error || 'API request failed');
+    }
+    
+    // Registrar uso após sucesso da API
+    try {
+      if (action === 'translate') {
+        await usageTracker.recordTranslation();
+      } else {
+        await usageTracker.recordResponse();
+      }
+    } catch (usageError) {
+      console.error('Error recording usage:', usageError);
+      // Não falha a requisição por erro de tracking
     }
     
     // Processar resposta da API segura

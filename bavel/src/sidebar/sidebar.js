@@ -1,9 +1,98 @@
+// Global billing UI instance
+let billingUI;
+
 document.addEventListener('DOMContentLoaded', async function() {
     await i18n.init();
     updateUI();
     setupEventListeners();
+    initializeBilling();
     initializeSidebar();
 });
+
+// Initialize billing system
+function initializeBilling() {
+    try {
+        billingUI = new BillingUI();
+        console.log('Billing UI initialized successfully');
+        
+        // Update header with subscription info
+        updateHeaderWithSubscriptionInfo();
+        
+        // Set up periodic updates (every 30 seconds)
+        setInterval(updateHeaderWithSubscriptionInfo, 30000);
+    } catch (error) {
+        console.error('Error initializing billing UI:', error);
+    }
+}
+
+// Update header with subscription and usage information
+async function updateHeaderWithSubscriptionInfo() {
+    try {
+        // Get subscription status
+        const subscriptionResponse = await chrome.runtime.sendMessage({
+            action: 'getSubscriptionStatus'
+        });
+        
+        // Get usage stats
+        const usageResponse = await chrome.runtime.sendMessage({
+            action: 'getUsageStats'
+        });
+        
+        if (subscriptionResponse.success && usageResponse.success) {
+            const subscription = subscriptionResponse.data;
+            const usage = usageResponse.data;
+            
+            updateHeaderPlanInfo(subscription, usage);
+        }
+    } catch (error) {
+        console.error('Error updating header subscription info:', error);
+    }
+}
+
+// Update header plan information
+function updateHeaderPlanInfo(subscription, usage) {
+    const planNameEl = document.getElementById('headerPlanName');
+    const usageTextEl = document.getElementById('headerUsageText');
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    const planBadge = document.getElementById('planBadge');
+    
+    if (!planNameEl) return;
+    
+    // Update plan name
+    const planNames = {
+        'free': 'Free',
+        'trial': 'Trial',
+        'pro': 'Pro'
+    };
+    
+    planNameEl.textContent = planNames[subscription.plan] || 'Free';
+    
+    // Update plan badge styling
+    planBadge.className = `plan-badge ${subscription.plan}`;
+    
+    // Update usage text
+    if (usage.daily.limit === -1) {
+        usageTextEl.textContent = '∞ hoje';
+    } else {
+        usageTextEl.textContent = `${usage.daily.used}/${usage.daily.limit} hoje`;
+    }
+    
+    // Show/hide upgrade button
+    if (subscription.plan === 'free' || (subscription.plan === 'trial' && subscription.daysUntilTrialExpires <= 2)) {
+        upgradeBtn.classList.remove('hidden');
+    } else {
+        upgradeBtn.classList.add('hidden');
+    }
+    
+    // Update usage color based on percentage
+    if (usage.daily.percentage >= 90) {
+        usageTextEl.className = 'usage-text danger';
+    } else if (usage.daily.percentage >= 70) {
+        usageTextEl.className = 'usage-text warning';
+    } else {
+        usageTextEl.className = 'usage-text';
+    }
+}
 
 async function initializeSidebar() {
     const result = await chrome.storage.sync.get(['userLanguage', 'isFirstTime']);
@@ -21,6 +110,13 @@ function setupEventListeners() {
     document.getElementById('changeLanguageBtn').addEventListener('click', showSettings);
     document.getElementById('translateResponse').addEventListener('click', translateUserResponse);
     document.getElementById('copyResponse').addEventListener('click', copyResponseToClipboard);
+    
+    // Billing-related event listeners
+    document.getElementById('upgradeBtn')?.addEventListener('click', () => {
+        if (billingUI) {
+            billingUI.showBillingModal();
+        }
+    });
     
     // Setup modern language selector
     setupModernLanguageSelector();
@@ -268,6 +364,9 @@ async function translateUserResponse() {
         });
         
         if (response.success && response.data.translation) {
+            // Update header info after successful request
+            updateHeaderWithSubscriptionInfo();
+            
             let translationHTML = `
                 <div class="translation-result">
                     <strong>${i18n.t('translationLabel')}</strong>
@@ -309,7 +408,24 @@ async function translateUserResponse() {
             translationHTML += '</div>';
             translationDiv.innerHTML = translationHTML;
         } else {
-            translationDiv.innerHTML = '<em>Não foi possível traduzir no momento</em>';
+            // Check if it's a billing-related error
+            if (response.needsUpgrade) {
+                translationDiv.innerHTML = `
+                    <div class="upgrade-prompt">
+                        <p><em>${response.error}</em></p>
+                        <button class="upgrade-prompt-btn" onclick="billingUI?.showBillingModal()">
+                            Ver Planos
+                        </button>
+                    </div>
+                `;
+                
+                // Also show the usage warning
+                if (billingUI) {
+                    billingUI.showUsageWarning(response.error);
+                }
+            } else {
+                translationDiv.innerHTML = '<em>Não foi possível traduzir no momento</em>';
+            }
         }
     } catch (error) {
         console.error('Erro ao traduzir:', error);

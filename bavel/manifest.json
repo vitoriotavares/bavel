@@ -26,6 +26,11 @@
       "matches": ["<all_urls>"],
       "js": ["src/content/content.js"],
       "css": ["assets/css/content.css"]
+    },
+    {
+      "matches": ["https://extensionpay.com/*"],
+      "js": ["src/lib/extpay.js"],
+      "run_at": "document_start"
     }
   ],
   
