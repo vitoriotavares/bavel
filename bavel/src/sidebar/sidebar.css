@@ -1,3 +1,76 @@
+/* Definições das fontes SF Pro Display */
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYTHINITALIC.OTF') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF') format('opentype');
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF') format('opentype');
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYBLACKITALIC.OTF') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,10 +78,11 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f8f9fa;
-    color: #333;
-    line-height: 1.5;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f8f9fb;
+    color: #3c4043;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
 .sidebar-container {
@@ -22,40 +96,48 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e9ecef;
-    margin-bottom: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.08);
+    margin-bottom: 16px;
+    border: 1px solid #f1f3f4;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .logo-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
 }
 
 .logo h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #2563eb;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a73e8;
+    margin: 0;
 }
 
 .settings-btn {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    padding: 8px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    color: #5f6368;
 }
 
 .settings-btn:hover {
-    background-color: #e9ecef;
+    background: #f8f9fa;
+    color: #1a73e8;
+    transform: rotate(15deg);
 }
 
 .welcome-screen, .idle-screen, .analysis-screen, .loading-screen {
@@ -108,50 +190,183 @@ body {
     font-size: 14px;
 }
 
-.section {
+/* Modern Analysis Screen Styles */
+.analysis-screen {
+    background: #f8f9fb;
+    padding: 16px;
+    gap: 16px;
+}
+
+/* Modern Header */
+.modern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: white;
-    border-radius: 8px;
+    padding: 16px 20px;
+    border-radius: 20px;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.08);
+    margin-bottom: 16px;
+    border: 1px solid #f1f3f4;
+}
+
+.language-pair {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lang-badge {
+    background: #f8f9fa;
+    color: #5f6368;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #e8eaed;
+}
+
+.lang-separator {
+    color: #9aa0a6;
+    display: flex;
+    align-items: center;
+}
+
+.word-count-modern .word-count {
+    color: #9aa0a6;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Modern Tabs */
+.tabs-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.08);
+    border: 1px solid #f1f3f4;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8eaed;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5f6368;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tab-btn:hover {
+    background: #f1f3f4;
+    color: #3c4043;
+}
+
+.tab-btn.active {
+    color: #1a73e8;
+    background: white;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #1a73e8;
+}
+
+.tabs-content {
+    padding: 20px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeInTab 0.3s ease-in-out;
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modern Text Cards */
+.text-card {
+    background: #f8f9fa;
+    border-radius: 16px;
     padding: 16px;
     margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e8eaed;
+    transition: all 0.2s ease;
 }
 
-.section h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #374151;
+.text-card:hover {
+    box-shadow: 0 2px 8px rgba(32, 33, 36, 0.1);
 }
 
-.text-content {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 6px;
-    border-left: 3px solid #2563eb;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.text-meta {
+.card-header {
     display: flex;
-    gap: 12px;
-    margin-top: 8px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.language-tag {
-    background: #2563eb;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
+.card-header h4 {
+    font-size: 14px;
     font-weight: 500;
+    color: #5f6368;
+    margin: 0;
 }
 
-.word-count {
-    color: #6b7280;
-    font-size: 12px;
+.copy-btn {
+    background: none;
+    border: none;
+    color: #5f6368;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
+.copy-btn:hover {
+    background: #e8eaed;
+    color: #1a73e8;
+}
+
+.text-display {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #3c4043;
+    border: 1px solid #e8eaed;
+    min-height: 60px;
+}
+
+.original-card .text-display {
+    border-left: 3px solid #ea4335;
+}
+
+.translation-card .text-display {
+    border-left: 3px solid #34a853;
+}
+
+/* Modern Suggestions */
 .suggestions-list {
     display: flex;
     flex-direction: column;
@@ -159,47 +374,105 @@ body {
 }
 
 .suggestion-item {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 12px;
+    background: white;
+    border: 1px solid #e8eaed;
+    border-radius: 12px;
+    padding: 14px 16px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     font-size: 14px;
+    line-height: 1.5;
+    color: #3c4043;
 }
 
 .suggestion-item:hover {
-    background: #e2e8f0;
-    border-color: #2563eb;
+    background: #f8f9fa;
+    border-color: #1a73e8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
 }
 
 .suggestion-item.selected {
-    background: #dbeafe;
-    border-color: #2563eb;
+    background: #e8f0fe;
+    border-color: #1a73e8;
+    color: #1a73e8;
 }
 
-.response-area textarea {
+/* Modern Response Section */
+.response-section {
+    margin-top: 16px;
+}
+
+.response-card textarea {
     width: 100%;
-    min-height: 100px;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 14px;
+    min-height: 120px;
+    padding: 16px;
+    border: 1px solid #e8eaed;
+    border-radius: 12px;
+    font-size: 15px;
     font-family: inherit;
     resize: vertical;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    background: white;
+    color: #3c4043;
+    line-height: 1.6;
+    transition: all 0.2s ease;
 }
 
-.response-area textarea:focus {
+.response-card textarea:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.response-card textarea::placeholder {
+    color: #9aa0a6;
 }
 
 .response-actions {
     display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* Modern Action Buttons */
+.action-btn {
+    display: flex;
+    align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 1px solid #e8eaed;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    color: #3c4043;
+}
+
+.action-btn:hover {
+    background: #f8f9fa;
+    border-color: #dadce0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(32, 33, 36, 0.1);
+}
+
+.action-btn.primary {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.action-btn.primary:hover {
+    background: #1557b0;
+    border-color: #1557b0;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.action-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .primary-btn, .secondary-btn {
@@ -231,12 +504,22 @@ body {
     background: #e5e7eb;
 }
 
+/* Modern Response Translation */
 .response-translation {
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 14px;
+    background: #e8f0fe;
+    border: 1px solid #d2e3fc;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #3c4043;
+    margin-top: 8px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .translation-result {

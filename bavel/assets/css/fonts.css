@@ -1,4 +1,4 @@
-/* Definições das fontes SF Pro Display */
+/* Definições globais das fontes SF Pro Display */
 @font-face {
     font-family: 'SF Pro Display';
     src: url('../fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
@@ -71,18 +71,7 @@
     font-display: swap;
 }
 
-/* Estilos para o content script - podem ser usados para destacar texto selecionado */
-
-.bavel-highlight {
-    background-color: rgba(37, 99, 235, 0.1) !important;
-    border: 1px solid rgba(37, 99, 235, 0.3) !important;
-    border-radius: 2px !important;
-    transition: all 0.2s ease !important;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
-
-.bavel-processing {
-    background-color: rgba(245, 158, 11, 0.1) !important;
-    border: 1px solid rgba(245, 158, 11, 0.3) !important;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
+/* Classe utilitária para aplicar a fonte SF Pro Display */
+.sf-pro-display {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+} 

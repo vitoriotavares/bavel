@@ -1,0 +1,116 @@
+/* Definições das fontes SF Pro Display */
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYTHINITALIC.OTF') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF') format('opentype');
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF') format('opentype');
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('../assets/fonts/SFPRODISPLAYBLACKITALIC.OTF') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Estilos base do popup */
+body {
+    width: 300px;
+    padding: 16px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 400;
+    margin: 0;
+    background-color: #ffffff;
+    color: #1f2937;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.logo h1 {
+    color: #2563eb;
+    margin: 8px 0;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.status {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 16px;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.instructions {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.instructions strong {
+    font-weight: 600;
+} 

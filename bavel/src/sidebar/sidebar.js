@@ -25,6 +25,12 @@ function setupEventListeners() {
     // Setup modern language selector
     setupModernLanguageSelector();
     
+    // Setup modern tabs
+    setupModernTabs();
+    
+    // Setup copy translation button
+    setupCopyTranslationButton();
+    
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Sidebar received message:', message);
         
@@ -110,14 +116,29 @@ function showWelcomeScreen() {
 function showAnalysisScreen(data) {
     hideAllScreens();
     
+    // Preencher dados nos novos elementos
     document.getElementById('originalText').textContent = data.originalText;
     document.getElementById('translationText').textContent = data.translation || 'Carregando tradução...';
     document.getElementById('contextText').textContent = data.context || 'Carregando contexto...';
     
-    document.getElementById('detectedLanguage').textContent = detectLanguageFromText(data.originalText);
-    document.getElementById('wordCount').textContent = `${data.originalText.split(' ').length} ${i18n.t('words')}`;
+    // Atualizar header moderno com informações de idioma
+    const detectedLang = detectLanguageFromText(data.originalText);
+    const detectedLanguageElement = document.getElementById('detectedLanguage');
+    detectedLanguageElement.textContent = detectedLang;
+    detectedLanguageElement.className = 'lang-badge';
     
+    // Atualizar badge do idioma nativo
+    updateNativeLanguageBadge();
+    
+    // Atualizar contador de palavras
+    const wordCount = data.originalText.split(' ').length;
+    document.getElementById('wordCount').textContent = `${wordCount} ${i18n.t('words')}`;
+    
+    // Preencher sugestões
     displaySuggestions(data.suggestions || []);
+    
+    // Garantir que a primeira tab (Translation) está ativa
+    setActiveTab('translation');
     
     document.getElementById('analysisScreen').classList.remove('hidden');
 }
@@ -419,4 +440,98 @@ function showMessage(message, type) {
     setTimeout(() => {
         messageDiv.remove();
     }, 3000);
+}
+
+// Modern Tabs Functionality
+function setupModernTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Show corresponding tab content
+            const targetContent = document.getElementById(targetTab + 'Tab');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+}
+
+// Modern Copy Translation Functionality
+function setupCopyTranslationButton() {
+    const copyTranslationBtn = document.getElementById('copyTranslation');
+    if (copyTranslationBtn) {
+        copyTranslationBtn.addEventListener('click', copyTranslationToClipboard);
+    }
+}
+
+function copyTranslationToClipboard() {
+    const translationText = document.getElementById('translationText').textContent.trim();
+    
+    if (!translationText || translationText === 'Carregando tradução...') {
+        showMessage('Nenhuma tradução disponível para copiar', 'error');
+        return;
+    }
+    
+    navigator.clipboard.writeText(translationText).then(() => {
+        showMessage('Tradução copiada!', 'success');
+        
+        // Add visual feedback to button
+        const copyBtn = document.getElementById('copyTranslation');
+        const originalColor = copyBtn.style.color;
+        copyBtn.style.color = '#34a853';
+        setTimeout(() => {
+            copyBtn.style.color = originalColor;
+        }, 1000);
+    }).catch(() => {
+        showMessage('Erro ao copiar tradução', 'error');
+    });
+}
+
+// Helper function to update native language badge
+async function updateNativeLanguageBadge() {
+    const result = await chrome.storage.sync.get(['userLanguage']);
+    const userLanguage = result.userLanguage || 'pt';
+    
+    // Map language codes to display names
+    const languageNames = {
+        'pt': 'Português',
+        'en': 'English',
+        'es': 'Español',
+        'fr': 'Français',
+        'de': 'Deutsch',
+        'it': 'Italiano'
+    };
+    
+    const nativeLangBadge = document.querySelector('.native-lang');
+    if (nativeLangBadge) {
+        nativeLangBadge.textContent = languageNames[userLanguage] || userLanguage.toUpperCase();
+    }
+}
+
+// Helper function to set active tab
+function setActiveTab(tabName) {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Remove active class from all
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+    
+    // Set active tab
+    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+    const activeContent = document.getElementById(tabName + 'Tab');
+    
+    if (activeButton) activeButton.classList.add('active');
+    if (activeContent) activeContent.classList.add('active');
 }
